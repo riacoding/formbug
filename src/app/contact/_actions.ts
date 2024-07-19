@@ -21,8 +21,7 @@ type sendMessageResponse = {
 export async function sendMessage(prevState: any, data: FormData): Promise<sendMessageResponse> {
   console.log('sendMessage Action called')
   try {
-    const tester = Object.fromEntries(data)
-    const formData = formDataToObject(data)
+    const formData = Object.fromEntries(data)
     const parsed = FormData.safeParse(formData)
 
     if (!parsed.success) {
@@ -31,7 +30,7 @@ export async function sendMessage(prevState: any, data: FormData): Promise<sendM
       return {
         message: 'Failed to send message',
         errors: formattedErrors,
-        fields: formData,
+        fields: formData as ContactFormData,
       }
     }
 
@@ -52,21 +51,4 @@ export async function sendMessage(prevState: any, data: FormData): Promise<sendM
       message: 'Failed to send Message',
     }
   }
-}
-
-function formDataToObject(formData: FormData): ContactFormData {
-  const obj: { [key: string]: any } = {}
-
-  formData.forEach((value, key) => {
-    if (obj[key]) {
-      if (!Array.isArray(obj[key])) {
-        obj[key] = [obj[key]]
-      }
-      obj[key].push(value)
-    } else {
-      obj[key] = value
-    }
-  })
-
-  return obj as ContactFormData
 }
