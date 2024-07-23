@@ -3,7 +3,8 @@ import React, { useRef, useTransition, useEffect, RefObject, FormEventHandler } 
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FormData, ContactSchema } from '@/types'
+import { FormDataCustom,ContactSchema } from '@/types'//
+
 import FormField from './formField'
 import { SubmitButton } from './submitButton'
 import Textarea from './textarea'
@@ -26,6 +27,7 @@ function ContactForm() {
   const formRef = useRef<HTMLFormElement>(null)
 
   const [state, formAction] = useFormState(sendMessage, initialState)
+  console.log(formAction)
 
   const {
     register,
@@ -35,7 +37,7 @@ function ContactForm() {
     formState,
     trigger,
     setError,
-  } = useForm<FormData>({
+  } = useForm<FormDataCustom>({
     resolver: zodResolver(ContactSchema),
     defaultValues: {
       name: '',
@@ -58,7 +60,7 @@ function ContactForm() {
 
   // Custom submit handler to access the event
   const onSubmit = async (
-    data: FormData,
+    data: FormDataCustom,
     event: React.BaseSyntheticEvent<object, any, any> | undefined,
     formRef: any
   ): Promise<void> => {
@@ -70,7 +72,14 @@ function ContactForm() {
     //debugger
     if (isValid) {
       // Manual form submission
-      formRef.current?.submit()
+      // formRef.current?.requestSubmit()
+      const form = new FormData()
+
+      form.append('name', data.name) 
+      form.append('email', data.email)
+      form.append('subject', data.subject)
+      form.append('message', data.message) 
+      formAction(form)
     } else {
       console.log('Form is invalid')
     }
@@ -85,7 +94,7 @@ function ContactForm() {
       {state.message !== 'success' ? (
         <form
           ref={formRef}
-          action={formAction}
+          // action={formAction}
           onSubmit={handleSubmit((data, event) => onSubmit(data, event, formRef))}
         >
           <div className='grid col-auto gap-4'>

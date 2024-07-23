@@ -1,5 +1,4 @@
-'use client'
-
+import { Suspense } from 'react'
 import Link from 'next/link'
 import ContactForm from '@/components/contactForm'
 
@@ -20,7 +19,9 @@ export default function Contact() {
       </div>
       <div className='w-full flex flex-col justify-center items-center'>
         <div className='w-full md:w-1/2 min-h-[400px] space-y-4'>
+          <Suspense fallback={null}>
           <ContactForm />
+          </Suspense>
         </div>
       </div>
     </div>
