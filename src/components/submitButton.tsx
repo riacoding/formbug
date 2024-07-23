@@ -3,7 +3,7 @@ import { useFormStatus } from 'react-dom'
 
 export function SubmitButton({ text }: { text: string }) {
   const { pending } = useFormStatus()
-  console.log('submit Button', pending, text)
+  console.log('submit is Button', pending, text)
   return (
     <button
       disabled={pending}
